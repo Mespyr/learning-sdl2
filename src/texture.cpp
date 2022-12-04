@@ -2,27 +2,19 @@
 
 SDL_Texture* load_texture(const std::string &file, SDL_Renderer* ren)
 {
-	SDL_Texture* texture = nullptr;
-	SDL_Surface *img = SDL_LoadBMP(file.c_str());
-
-	if (img != nullptr)
-	{
-		texture = SDL_CreateTextureFromSurface(ren, img);
-		SDL_FreeSurface(img);
-		if (texture == nullptr)
-			log_sdl_error(std::cout, "CreateTextureFromSurface");
+	SDL_Texture *texture = IMG_LoadTexture(ren, file.c_str());
+	if (texture == nullptr){
+		log_sdl_error(std::cout, "LoadTexture");
 	}
-	else
-		log_sdl_error(std::cout, "LoadBMP");
-
 	return texture;
 }
 
-void render_texture(SDL_Texture *tex, SDL_Renderer *ren, int x, int y)
+void render_texture(SDL_Texture *tex, SDL_Renderer *ren, int x, int y, int w, int h)
 {
 	SDL_Rect dst;
 	dst.x = x;
 	dst.y = y;
-	SDL_QueryTexture(tex, NULL, NULL, &dst.w, &dst.h);
+	dst.w = w;
+	dst.h = h;
 	SDL_RenderCopy(ren, tex, NULL, &dst);
 }

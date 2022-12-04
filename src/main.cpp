@@ -4,8 +4,8 @@
 #include "include/cleanup.h"
 #include "include/texture.h"
 
-const int SCREEN_WIDTH  = 640;
-const int SCREEN_HEIGHT = 480;
+const int SCREEN_WIDTH  = 700;
+const int SCREEN_HEIGHT = 700;
 
 int main()
 {
@@ -23,6 +23,7 @@ int main()
 		return 1;
 	}
 
+
 	SDL_Renderer *ren = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 	if (ren == nullptr)
 	{
@@ -32,7 +33,7 @@ int main()
 		return 1;
 	}
 
-	std::string image_path = get_res_path() + "background.bmp";
+	std::string image_path = get_res_path() + "png_test.png";
 	SDL_Texture *tex = load_texture(image_path, ren);
 	if (tex == nullptr)
 	{
@@ -41,19 +42,30 @@ int main()
 		return 1;
 	}
 
-	for (int i = 0; i < 3; ++i)
+	SDL_Event e;
+	bool quit = false;
+	while (!quit)
 	{
+		while (SDL_PollEvent(&e))
+		{
+			if (e.type == SDL_QUIT)
+				quit = true;
+			if (e.type == SDL_KEYDOWN)
+				quit = true;
+			if (e.type == SDL_MOUSEBUTTONDOWN)
+				quit = true;
+		}
+
 		SDL_RenderClear(ren);
-
-		int w, h;
-		SDL_QueryTexture(tex, NULL, NULL, &w, &h);
-		render_texture(tex, ren, 0, 0);
-		render_texture(tex, ren, w, 0);
-		render_texture(tex, ren, 0, h);
-		render_texture(tex, ren, w, h);
-
+		render_texture(tex, ren, 0, 0,
+			SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
+		render_texture(tex, ren, SCREEN_WIDTH / 2, 0,
+			SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
+		render_texture(tex, ren, 0, SCREEN_HEIGHT / 2,
+			SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
+		render_texture(tex, ren, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2,
+			SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
 		SDL_RenderPresent(ren);
-		SDL_Delay(1000);
 	}
 
 	cleanup(tex, ren, window);
