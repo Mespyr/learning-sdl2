@@ -23,7 +23,6 @@ int main()
 		return 1;
 	}
 
-
 	SDL_Renderer *ren = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 	if (ren == nullptr)
 	{
